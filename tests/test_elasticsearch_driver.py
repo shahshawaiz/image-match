@@ -40,24 +40,24 @@ MAPPINGS = {
 def index_name():
     return INDEX_NAME
 
-@pytest.fixture(scope='function', autouse=True)
-def setup_index(request, index_name):
-    es = Elasticsearch()
-    try:
-        es.indices.create(index=index_name, body=MAPPINGS)
-    except RequestError as e:
-        if e.error == u'index_already_exists_exception':
-            es.indices.delete(index_name)
-        else:
-            raise
+# @pytest.fixture(scope='function', autouse=True)
+# def setup_index(request, index_name):
+#     es = Elasticsearch()
+#     try:
+#         es.indices.create(index=index_name, body=MAPPINGS)
+#     except RequestError as e:
+#         if e.error == u'index_already_exists_exception':
+#             es.indices.delete(index_name)
+#         else:
+#             raise
 
-    def fin():
-        try:
-            es.indices.delete(index_name)
-        except NotFoundError:
-            pass
+#     def fin():
+#         try:
+#             es.indices.delete(index_name)
+#         except NotFoundError:
+#             pass
 
-    request.addfinalizer(fin)
+#     request.addfinalizer(fin)
 
 @pytest.fixture(scope='function', autouse=True)
 def cleanup_index(request, es, index_name):
@@ -74,7 +74,7 @@ def es():
 
 @pytest.fixture
 def ses(es, index_name):
-    return SignatureES(es=es, index=index_name, doc_type=DOC_TYPE)
+    return SignatureES(es=es, index=index_name)
 
 def test_elasticsearch_running(es):
     i = 0

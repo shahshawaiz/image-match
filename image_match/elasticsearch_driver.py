@@ -40,7 +40,7 @@ class SignatureES(SignatureDatabaseBase):
         """
         self.es = es
         self.index = index
-        self.doc_type = doc_type
+        # self.doc_type = doc_type
         self.timeout = timeout
         self.size = size
 
@@ -65,7 +65,6 @@ class SignatureES(SignatureDatabaseBase):
             body['query']['bool']['filter'] = pre_filter
 
         res = self.es.search(index=self.index,
-                              doc_type=self.doc_type,
                               body=body,
                               size=self.size,
                               timeout=self.timeout)['hits']['hits']
@@ -91,7 +90,7 @@ class SignatureES(SignatureDatabaseBase):
 
     def insert_single_record(self, rec, refresh_after=False):
         rec['timestamp'] = datetime.now()
-        self.es.index(index=self.index, doc_type=self.doc_type, body=rec, refresh=refresh_after)
+        self.es.index(index=self.index, body=rec, refresh=refresh_after)
 
     def delete_duplicates(self, path):
         """Delete all but one entries in elasticsearch whose `path` value is equivalent to that of path.
@@ -108,4 +107,4 @@ class SignatureES(SignatureDatabaseBase):
                           if item['_source']['path'] == path]
         if len(matching_paths) > 0:
             for id_tag in matching_paths[1:]:
-                self.es.delete(index=self.index, doc_type=self.doc_type, id=id_tag)
+                self.es.delete(index=self.index, id=id_tag)

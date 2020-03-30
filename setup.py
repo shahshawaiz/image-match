@@ -89,7 +89,7 @@ setup(
     ],
     install_requires=[
         'scikit-image>=0.14',
-        'elasticsearch>=7.4.0',
+        'elasticsearch>=5.0.0,<7.4.0',
         'six>=1.11.0',
     ],
     tests_require=tests_require,
